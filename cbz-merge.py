@@ -96,7 +96,7 @@ class Comic:
             exit()
 
     def get_cbz_files(self):
-        getkey = lambda name: float(os.path.basename(os.path.splitext(name)[0])[name.rfind("_c")+2:])
+        getkey = lambda name: float(''.join(filter(str.isdigit, os.path.basename(os.path.splitext(name)[0])[name.rfind("_c")+2:])))
         files = [f for f in os.listdir(self.parent_dir) if f.lower().endswith("cbz")]
         files.sort(key=getkey)
         if len(files) == 0:
@@ -106,17 +106,20 @@ class Comic:
             return files
 
     def get_image_files(self,dir):
-        getkey = lambda name: float(os.path.basename(os.path.splitext(name)[0])[name.rfind("_p")+2:])
-        files = [f for f in os.listdir(dir) if f.lower().endswith(".jpg") or f.lower.endswith(".png")]
+        getkey = lambda name: float(os.path.basename(os.path.splitext(name)[0])[name.rfind("_p")+2:]) if "_p" in name else -1
+
+        files = [f for f in os.listdir(dir) if f.lower().endswith(".jpg") or f.lower().endswith(".png")]
+
         files.sort(key=getkey)
         logging.info("{} : {} files".format(dir,len(files)))
         return files
 
 
     def list_image(self,dir):
-        files = [f for f in os.listdir(dir) if f.lower().endswith(".jpg") or f.lower.endswith(".png")]
+        files = [f for f in os.listdir(dir) if f.lower().endswith(".jpg") or f.lower().endswith(".png")] 
         files.sort(key=lambda name: int(os.path.basename(os.path.splitext(name)[0])))
         return files
+
 
     def extract_cbz(self,cbzfile):
         logging.info(cbzfile)
